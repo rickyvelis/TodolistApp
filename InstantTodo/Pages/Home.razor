@@ -1,0 +1,63 @@
+﻿@page "/"
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<PageTitle>Home</PageTitle>
+
+@JsonOutput
+
+<h1>@Name</h1>
+
+@code{
+    public TodoList LocalTodoList;
+
+    string? Name { get; set; }
+
+    string? JsonOutput { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        List<TodoList> lists = new List<TodoList>()
+        {
+            new TodoList()
+            {
+                TodoItems = new List<TodoItem>()
+                {
+                    new TodoItem()
+                    {
+                        Id = 1,
+                        Title = "Apples",
+                        Description = "Jonagold preferably",
+                        IsDone = false
+                    },                    
+                    new TodoItem()
+                    {
+                        Id = 2,
+                        Title = "Bread",
+                        Description = "Vollkorn",
+                        IsDone = true
+                    }
+                },
+                Title = "Groceries",
+                Description = "For Luu's Birthday :)"
+            }
+        };
+        string json = JsonSerializer.Serialize(lists);
+
+        await LocalStorage.SetItemAsync("list1", json);
+
+        //await LocalStorage.SetItemAsync("name", "R Smith");
+        JsonOutput = await LocalStorage.GetItemAsync<string>("list1");
+
+
+        List<TodoList>? deserializedList = JsonSerializer.Deserialize<List<TodoList>>(JsonOutput);
+
+        TodoList l = deserializedList.Where(x => x.Title == "Groceries") as TodoList;
+
+        //Name = JsonSerializer.Serialize(deserializedList);
+        Name = deserializedList[0].TodoItems[1].Description;
+
+        await LocalStorage.RemoveItemAsync("list1");
+    }
+
+
+}

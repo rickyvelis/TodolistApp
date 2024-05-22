@@ -1,63 +1,50 @@
 ﻿@page "/"
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@using InstantTodo.Shared
 
 <PageTitle>Home</PageTitle>
 
-@JsonOutput
+<div class="container text-center" style="max-width: 500px;">
+    <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Enter a title for a new list" />
+    </div>
+    
+    @if (todoLists != null)
+    {
+        <div class="list-group mb-3 text-start">
 
-<h1>@Name</h1>
+        @foreach (TodoList list in todoLists)
+        {
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@list.Title</h5>
+                    <small>@list.GetPassedTime()</small>
+                </div>
+                <p class="mb-1">@list.Description</p>
+                <small>@list.GetTasksPreview()</small>
+            </a>
+        }
+        </div>
+
+    }
+
+</div>
+
 
 @code{
-    public TodoList LocalTodoList;
-
-    string? Name { get; set; }
-
-    string? JsonOutput { get; set; }
+    List<TodoList>? todoLists;
 
     protected override async Task OnInitializedAsync()
     {
-        List<TodoList> lists = new List<TodoList>()
-        {
-            new TodoList()
-            {
-                TodoItems = new List<TodoItem>()
-                {
-                    new TodoItem()
-                    {
-                        Id = 1,
-                        Title = "Apples",
-                        Description = "Jonagold preferably",
-                        IsDone = false
-                    },                    
-                    new TodoItem()
-                    {
-                        Id = 2,
-                        Title = "Bread",
-                        Description = "Vollkorn",
-                        IsDone = true
-                    }
-                },
-                Title = "Groceries",
-                Description = "For Luu's Birthday :)"
-            }
-        };
-        string json = JsonSerializer.Serialize(lists);
-
-        await LocalStorage.SetItemAsync("list1", json);
-
-        //await LocalStorage.SetItemAsync("name", "R Smith");
-        JsonOutput = await LocalStorage.GetItemAsync<string>("list1");
-
-
-        List<TodoList>? deserializedList = JsonSerializer.Deserialize<List<TodoList>>(JsonOutput);
-
-        TodoList l = deserializedList.Where(x => x.Title == "Groceries") as TodoList;
-
-        //Name = JsonSerializer.Serialize(deserializedList);
-        Name = deserializedList[0].TodoItems[1].Description;
-
-        await LocalStorage.RemoveItemAsync("list1");
+        await GetLists();
     }
 
-
+    async Task GetLists()
+    {
+        string? jsonOutput = await LocalStorage.GetItemAsync<string>("data");
+        if (!string.IsNullOrEmpty(jsonOutput))
+        {
+            todoLists = JsonSerializer.Deserialize<List<TodoList>>(jsonOutput);
+        }
+    }
 }

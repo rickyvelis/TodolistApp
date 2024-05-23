@@ -5,23 +5,34 @@
 
     @if (todoLists != null)
     {
-        <div class="list-group mb-3 text-start" >
+        <div class="list-group mb-3 text-start shadow-lg">
 
             @foreach (TodoList list in todoLists)
             {
-                <a href="#" class="list-group-item list-group-item-action">
+                <div class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">@list.Title</h5>
                         <small>@list.GetPassedTime()</small>
                     </div>
                     <p class="mb-1">@list.Description</p>
-                    <small>@list.GetTasksPreview()</small>
-                </a>
+                    <div class="d-flex w-100 justify-content-between">
+                        <small>@list.GetTasksPreview()</small>
+                        <div class=" dropdown">
+                            <a class="btn btn-sm rounded-pill text-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick:stopPropagation="true">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Delete list</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             }
         </div>
 
     }
 </div>
+
 
 @code {
     [Parameter] public List<TodoList> todoLists { get; set; } = new();

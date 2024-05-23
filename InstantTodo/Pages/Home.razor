@@ -4,35 +4,19 @@
 
 <PageTitle>Home</PageTitle>
 
-<div class="container text-center" style="max-width: 500px;">
-    <div class="mb-3">
-        <input type="text" class="form-control" placeholder="Enter a title for a new list" />
+<div class="container text-center">
+    <div class="row justify-content-md-center">
+        <ListOverview todoLists="todoLists"
+                      OnSubmit="AddList" />
+
+        <TodoListView/>
+
     </div>
-    
-    @if (todoLists != null)
-    {
-        <div class="list-group mb-3 text-start">
-
-        @foreach (TodoList list in todoLists)
-        {
-            <a href="#" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">@list.Title</h5>
-                    <small>@list.GetPassedTime()</small>
-                </div>
-                <p class="mb-1">@list.Description</p>
-                <small>@list.GetTasksPreview()</small>
-            </a>
-        }
-        </div>
-
-    }
-
 </div>
 
-
 @code{
-    List<TodoList>? todoLists;
+    List<TodoList> todoLists = new();
+    string titleNewList = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -46,5 +30,19 @@
         {
             todoLists = JsonSerializer.Deserialize<List<TodoList>>(jsonOutput);
         }
+    }
+
+    async Task AddList(string title)
+    {
+        todoLists.Add(new TodoList() { Title = title });
+        titleNewList = "";
+        string json = JsonSerializer.Serialize(todoLists);
+
+        await LocalStorage.SetItemAsync("data", json);
+        
+    }
+
+    async Task DeleteData(){
+        await LocalStorage.RemoveItemAsync("data");
     }
 }

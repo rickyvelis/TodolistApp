@@ -1,0 +1,39 @@
+﻿<div class="col col-lg-3">
+    <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Enter a title for a new list" @bind=titleNewList @bind:event="oninput" @onkeydown="OnEnter" />
+    </div>
+
+    @if (todoLists != null)
+    {
+        <div class="list-group mb-3 text-start" >
+
+            @foreach (TodoList list in todoLists)
+            {
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@list.Title</h5>
+                        <small>@list.GetPassedTime()</small>
+                    </div>
+                    <p class="mb-1">@list.Description</p>
+                    <small>@list.GetTasksPreview()</small>
+                </a>
+            }
+        </div>
+
+    }
+</div>
+
+@code {
+    [Parameter] public List<TodoList> todoLists { get; set; } = new();
+    [Parameter] public EventCallback<string> OnSubmit { get; set; }
+
+    public string titleNewList = "";
+
+    private void OnEnter(KeyboardEventArgs e)
+    {
+        if ((e.Code == "Enter" || e.Code == "NumpadEnter") && !string.IsNullOrEmpty(titleNewList))
+        {
+            OnSubmit.InvokeAsync(titleNewList);
+        }
+    } 
+}

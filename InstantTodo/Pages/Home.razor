@@ -7,16 +7,25 @@
 <div class="container text-center">
     <div class="row justify-content-md-center">
         <ListOverview todoLists="todoLists"
-                      OnSubmit="AddList" />
-
-        <TodoListView/>
+                      OnSubmit="AddList" 
+                      ClickedList="DisplayList"
+                      ClickedListDelete="DeleteList"/>
+        @if (activeId < int.MaxValue)
+        {
+            <TodoListView todoList="activeList" 
+                          OnSubmit="AddTodoItem"
+                          OnChecked="UpdateItemCheck"
+                          OnDescriptionUpdate="UpdateLocalStorage" />
+        }
 
     </div>
 </div>
 
 @code{
     List<TodoList> todoLists = new();
-    string titleNewList = "";
+    TodoList activeList = new();
+
+    int activeId = int.MaxValue;
 
     protected override async Task OnInitializedAsync()
     {
@@ -34,15 +43,74 @@
 
     async Task AddList(string title)
     {
-        todoLists.Add(new TodoList() { Title = title });
-        titleNewList = "";
-        string json = JsonSerializer.Serialize(todoLists);
-
-        await LocalStorage.SetItemAsync("data", json);
-        
+        todoLists.Add(new TodoList() { Id = todoLists.Count + 1, Title = title });
+        await UpdateLocalStorage();
     }
 
-    async Task DeleteData(){
-        await LocalStorage.RemoveItemAsync("data");
+    async Task DeleteList(int id)
+    {
+        //TODO NULL HANDLING
+        TodoList list = todoLists.Where(x => x.Id == id).FirstOrDefault();
+
+        todoLists.Remove(list);
+
+        if (activeId == id) //Makes sure to close the opened todolist, when the todolist is the one that is removed.
+        {
+            activeId = int.MaxValue;
+        }
+        await UpdateLocalStorage();
+    }
+
+    async Task UpdateLocalStorage() => await LocalStorage.SetItemAsync("data", JsonSerializer.Serialize(todoLists));
+    async Task DeleteData() => await LocalStorage.RemoveItemAsync("data");
+
+    private void DisplayList(int id)
+    {
+        //ADD NULL HANDLING
+        TodoList list = todoLists.Where(x => x.Id == id).FirstOrDefault();
+
+        activeList = list;
+        this.activeId = id;
+    }
+
+    async Task AddTodoItem(KeyValuePair<int, string> todoTitleWithListId)
+    {
+        int id = todoTitleWithListId.Key;
+        string title = todoTitleWithListId.Value;
+
+        //Get the list by given ID
+        //ADD NULL HANDLING
+        TodoList list = todoLists.Where(x => x.Id == id).FirstOrDefault();
+
+        //Create TodoItem object with the given title
+        TodoItem newItem = new()
+            {
+                Id = list.TodoItems.Count + 1,
+                Title = title
+            };
+
+        list.TodoItems.Add(newItem);
+
+        await UpdateLocalStorage();
+    }
+
+    async Task UpdateItemCheck(KeyValuePair<int, int> listIdAndItemId)
+    {
+        int listId = listIdAndItemId.Key;
+        int itemId = listIdAndItemId.Value;
+
+        TodoList list = todoLists.Where(x => x.Id == listId).FirstOrDefault();
+        TodoItem item = list.TodoItems.Where(x => x.Id == itemId).FirstOrDefault();
+
+        //toggle IsDone
+        item.IsDone = !item.IsDone;
+
+        await UpdateLocalStorage();
+
+    }
+
+    async Task UpdateDescription()
+    {
+        
     }
 }

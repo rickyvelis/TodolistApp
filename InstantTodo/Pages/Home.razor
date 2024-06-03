@@ -32,6 +32,10 @@
         await GetLists();
     }
 
+    private async Task UpdateLocalStorage() => await LocalStorage.SetItemAsync("data", JsonSerializer.Serialize(todoLists));
+    private async Task DeleteData() => await LocalStorage.RemoveItemAsync("data");
+    private TodoList GetListById(int listId) => todoLists.Where(x => x.Id == listId).FirstOrDefault();
+
     async Task GetLists()
     {
         string? jsonOutput = await LocalStorage.GetItemAsync<string>("data");
@@ -61,8 +65,7 @@
         await UpdateLocalStorage();
     }
 
-    async Task UpdateLocalStorage() => await LocalStorage.SetItemAsync("data", JsonSerializer.Serialize(todoLists));
-    async Task DeleteData() => await LocalStorage.RemoveItemAsync("data");
+
 
     private void DisplayList(int id)
     {
@@ -80,7 +83,7 @@
 
         //Get the list by given ID
         //ADD NULL HANDLING
-        TodoList list = todoLists.Where(x => x.Id == id).FirstOrDefault();
+        TodoList list = GetListById(id);
 
         //Create TodoItem object with the given title
         TodoItem newItem = new()
@@ -99,7 +102,7 @@
         int listId = listIdAndItemId.Key;
         int itemId = listIdAndItemId.Value;
 
-        TodoList list = todoLists.Where(x => x.Id == listId).FirstOrDefault();
+        TodoList list = GetListById(listId);
         TodoItem item = list.TodoItems.Where(x => x.Id == itemId).FirstOrDefault();
 
         //toggle IsDone
@@ -107,10 +110,5 @@
 
         await UpdateLocalStorage();
 
-    }
-
-    async Task UpdateDescription()
-    {
-        
     }
 }

@@ -2,34 +2,33 @@
     <div class="mb-3">
         <input type="text" class="form-control" placeholder="Enter a title for a new list" @bind=titleNewList @bind:event="oninput" @onkeydown="OnEnter" />
     </div>
-
     @if (todoLists != null)
     {
         <div class="list-group mb-3 text-start shadow-lg">
 
             @foreach (TodoList list in todoLists)
             {
-                <div class="list-group-item list-group-item-action">
+                <button class="list-group-item list-group-item-action" @onclick="() => OnListClick(list.Id)" >
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">@list.Title</h5>
-                        <small>@list.GetPassedTime()</small>
+                        <small class="text-secondary fw-light opacity-50">@list.GetPassedTimeSinceUpdate()</small>
                     </div>
-                    <p class="mb-1">@list.Description</p>
+                    <p class="text-secondary mb-1">@list.GetDescriptionPreview()</p>
                     <div class="d-flex w-100 justify-content-between">
-                        <small>@list.GetTasksPreview()</small>
-                        <div class=" dropdown">
+                        <small class="text-secondary">@list.GetTasksPreview()</small>
+                        <div class="dropdown dropend">
                             <a class="btn btn-sm rounded-pill text-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick:stopPropagation="true">
                                 <i class="fa-solid fa-ellipsis-vertical"></i>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Delete list</a></li>
+                                <li><a class="dropdown-item" href="#" @onclick="() => OnListClickDelete(list.Id)">Delete list</a></li>
+                                <li><a class="dropdown-item" href="#" @* @onclick="() => OnListClickDelete(list.Id) *@">Edit properties</a></li>
                             </ul>
                         </div>
                     </div>
-                </div>
+                </button>
             }
         </div>
-
     }
 </div>
 
@@ -37,14 +36,29 @@
 @code {
     [Parameter] public List<TodoList> todoLists { get; set; } = new();
     [Parameter] public EventCallback<string> OnSubmit { get; set; }
+    [Parameter] public EventCallback<int> ClickedList { get; set; }
+    [Parameter] public EventCallback<int> ClickedListDelete { get; set; }
+
 
     public string titleNewList = "";
+    const int DescPreviewLength = 30;
 
     private void OnEnter(KeyboardEventArgs e)
     {
         if ((e.Code == "Enter" || e.Code == "NumpadEnter") && !string.IsNullOrEmpty(titleNewList))
         {
             OnSubmit.InvokeAsync(titleNewList);
+            titleNewList = "";
         }
     } 
+
+    private void OnListClick(int id)
+    {
+        ClickedList.InvokeAsync(id);
+    }
+
+    private void OnListClickDelete(int id)
+    {
+        ClickedListDelete.InvokeAsync(id);
+    }
 }

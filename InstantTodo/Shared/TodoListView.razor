@@ -28,8 +28,7 @@
                             <textarea class="form-control" placeholder="Write a description here" id="floatingTextarea" style="height: 100px" @bind=_newDescription @ref="_descriptionTextArea"></textarea>
                             <label for="floatingTextarea">Description</label>
                         </div>
-                        <button class="btn btn-primary" @onclick="() => SaveDescription()">Save</button>
-                        <button class="btn btn-secondary">Cancel</button>
+                        <a type="button" class="btn btn-primary" @onclick="() => SaveDescription()">Save</a>
                     </form>
 
                 </div>

@@ -1,0 +1,127 @@
+﻿<div class="col col-lg-4">
+
+    @if (todoList != null)
+    {
+        <ul class="mb-3 list-group text-start shadow-lg">
+            <li class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <button class="btn rounded-1 text-start"><h4>@todoList.Title</h4></button>
+                    <a class="btn btn-sm rounded-pill text-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick:stopPropagation="true">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </a>
+                </div>
+
+
+                <div class="dropdown">
+                    <button class="btn rounded-1 text-secondary text-start" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true" @onclick="() => OnDescriptionClick()">
+                        @if (string.IsNullOrEmpty(todoList.Description))
+                        {
+                            <small class="text-body-tertiary">Click here to add a description...</small>
+                        }
+                        else
+                        {
+                            <span class="text-body-secondary">@todoList.Description</span>
+                        }
+                    </button>
+                    <form class="dropdown-menu p-4">
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" placeholder="Write a description here" id="floatingTextarea" style="height: 100px" @bind=_newDescription @ref="_descriptionTextArea"></textarea>
+                            <label for="floatingTextarea">Description</label>
+                        </div>
+                        <button class="btn btn-primary" @onclick="() => SaveDescription()">Save</button>
+                        <button class="btn btn-secondary">Cancel</button>
+                    </form>
+
+                </div>
+            </li>
+            @if (todoList.TodoItems != null)
+            {
+                if (todoList.TodoItems.Count <= 0)
+                {
+                    <li class="list-group-item text-secondary" @onclick="() => _newTodoItemTextInput.FocusAsync()">
+                        Add your first task in the textbox below!
+                    </li>
+                }
+                @foreach (TodoItem item in todoList.TodoItems.Where(x => x.IsDone == false))
+                {
+                    <li class="list-group-item">
+                        <button class="form-check-input me-1 rounded-1" type="button" value="" id="checkbox-@item.Id" @onclick="() => OnCheckMarkClick(todoList.Id, item.Id)">
+                        </button>
+                        <label class="form-check-label">@item.Title</label>
+                    </li>
+                }
+                <li class="list-group-item">
+                    <input type="text" class="form-control shadow-lg" placeholder="What is there to do?" @bind=_titleNewTodoItem @bind:event="oninput" @onkeydown="OnEnter" @ref="_newTodoItemTextInput" />
+                </li>
+            }
+        </ul>
+
+        @if (todoList.TodoItems != null)
+        {
+            <p class="d-inline-flex">
+                <button class="btn text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDone" aria-expanded="false" aria-controls="collapseDone">
+                    Completed items (@todoList.TodoItems.Where(x => x.IsDone == true).Count())
+                </button>
+            </p>
+
+            <ul class="mb-3 list-group text-start text-bg-primary collapse" id="collapseDone">
+                @foreach (TodoItem item in todoList.TodoItems.Where(x => x.IsDone == true))
+                {
+                    <li class="list-group-item">
+                        <button class="form-check-input me-1 rounded-1 btn-primary" type="button" value="" id="checkbox-@item.Id" @onclick="() => OnCheckMarkClick(todoList.Id, item.Id)">
+                            <small><i class="fa-solid fa-check fa-xs text-light" style="position:relative; left: -2px; top: -6px;"></i></small>
+                        </button>
+                        <label class="form-check-label text-body-secondary">@item.Title</label>
+                    </li>
+                }
+
+            </ul>
+
+        }
+
+    }
+    else
+    {
+       <span>TodoList is null</span> 
+    }
+
+</div>
+
+@code {
+    [Parameter] public TodoList todoList { get; set; } = new();
+    [Parameter] public EventCallback<KeyValuePair<int, string>> OnSubmit { get; set; }
+    [Parameter] public EventCallback<KeyValuePair<int, int>> OnChecked { get; set; }
+    [Parameter] public EventCallback OnDescriptionUpdate { get; set; }
+    private ElementReference _newTodoItemTextInput, _descriptionTextArea;
+    public string _titleNewTodoItem = "";
+    private string _newDescription = "";
+
+    private void OnEnter(KeyboardEventArgs e)
+    {
+        if ((e.Code == "Enter" || e.Code == "NumpadEnter") && !string.IsNullOrEmpty(_titleNewTodoItem))
+        {
+            OnSubmit.InvokeAsync( new(todoList.Id, _titleNewTodoItem) );
+            _titleNewTodoItem = "";
+        }
+    }
+
+    private async Task SaveDescription()
+    {
+        todoList.Description = _newDescription;
+
+        await OnDescriptionUpdate.InvokeAsync();
+    }
+
+    private async Task OnCheckMarkClick(int listId, int itemId)
+    {
+        await Task.Delay(10);
+
+        await OnChecked.InvokeAsync( new(listId, itemId) );
+    }
+
+    private void OnDescriptionClick()
+    {
+        _newDescription = todoList.Description;
+        _descriptionTextArea.FocusAsync();
+    }
+}

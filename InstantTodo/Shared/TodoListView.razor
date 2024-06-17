@@ -3,35 +3,49 @@
     @if (todoList != null)
     {
         <ul class="mb-3 list-group text-start shadow-lg">
-            <li class="list-group-item">
-                <div class="d-flex w-100 justify-content-between">
-                    <button class="btn rounded-1 text-start"><h4>@todoList.Title</h4></button>
-                    <a class="btn btn-sm rounded-pill text-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick:stopPropagation="true">
-                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </a>
+            <li class="list-group-item container">
+                <div class="row g-1">
+                    @* Title *@
+                    <div class="col-11 dropdown-center">
+                        <button class="btn rounded-1 text-start" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true" @onclick="() => OnTitleClick()">
+                            <h4>@todoList.Title</h4>
+                        </button>
+                        <form class="dropdown-menu shadow p-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" placeholder="Write a title here" id="titleFloatingText" @bind=_newListTitle @ref="_titleTextArea"></input>
+                                <label for="titleFloatingText">Title</label>
+                            </div>
+                            <a type="button" class="btn btn-primary w-100" @onclick="() => SaveTitle()">Save</a>
+                        </form>
+                    </div>
+
+                    <div class="col-1 text-end">
+                        <button type="button" class="btn-close" aria-label="Close" @onclick="() => OnClose.InvokeAsync()"></button>
+                    </div>
                 </div>
 
-
-                <div class="dropdown">
-                    <button class="btn rounded-1 text-secondary text-start" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true" @onclick="() => OnDescriptionClick()">
-                        @if (string.IsNullOrEmpty(todoList.Description))
-                        {
-                            <small class="text-body-tertiary">Click here to add a description...</small>
-                        }
-                        else
-                        {
-                            <span class="text-body-secondary">@todoList.Description</span>
-                        }
-                    </button>
-                    <form class="dropdown-menu shadow p-4">
-                        <div class="form-floating mb-3">
-                            <textarea class="form-control" placeholder="Write a description here" id="floatingTextarea" style="height: 100px" @bind=_newDescription @ref="_descriptionTextArea"></textarea>
-                            <label for="floatingTextarea">Description</label>
-                        </div>
-                        <a type="button" class="btn btn-primary" @onclick="() => SaveDescription()">Save</a>
-                    </form>
-
+                <div class="row">
+                    <div class="col dropdown-center">
+                        <button class="btn rounded-1 text-secondary text-start" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true" @onclick="() => OnDescriptionClick()">
+                            @if (string.IsNullOrEmpty(todoList.Description))
+                            {
+                                <small class="text-body-tertiary">Click here to add a description...</small>
+                            }
+                            else
+                            {
+                                <span class="text-body-secondary">@todoList.Description</span>
+                            }
+                        </button>
+                        <form class="dropdown-menu shadow p-4">
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" placeholder="Write a description here" id="floatingTextarea" style="height: 100px" @bind=_newDescription @ref="_descriptionTextArea"></textarea>
+                                <label for="floatingTextarea">Description</label>
+                            </div>
+                            <a type="button" class="btn btn-primary w-100" @onclick="() => SaveDescription()">Save</a>
+                        </form>
+                    </div>
                 </div>
+
             </li>
             @if (todoList.TodoItems != null)
             {
@@ -49,8 +63,17 @@
                         <label class="form-check-label">@item.Title</label>
                     </li>
                 }
-                <li class="list-group-item">
-                    <input type="text" class="form-control shadow-lg" placeholder="What is there to do?" @bind=_titleNewTodoItem @bind:event="oninput" @onkeydown="OnEnter" @ref="_newTodoItemTextInput" />
+                <li class="list-group-item container">
+                    <div class="row">
+                        <div class="col-11 border">
+                            <input type="text" class="form-control shadow-lg" placeholder="What is there to do?" @bind=_titleNewTodoItem @bind:event="oninput" @onkeydown="OnEnter" @ref="_newTodoItemTextInput" />
+                        </div>
+                        <div class="col-1 text-center border">
+                            <a class="btn btn-sm rounded-pill text-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick:stopPropagation="true">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </a>
+                        </div>
+                    </div>
                 </li>
             }
         </ul>
@@ -91,9 +114,11 @@
     [Parameter] public EventCallback<KeyValuePair<int, string>> OnSubmit { get; set; }
     [Parameter] public EventCallback<KeyValuePair<int, int>> OnChecked { get; set; }
     [Parameter] public EventCallback OnDescriptionUpdate { get; set; }
-    private ElementReference _newTodoItemTextInput, _descriptionTextArea;
+    [Parameter] public EventCallback OnTitleUpdate { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    private ElementReference _newTodoItemTextInput, _descriptionTextArea, _titleTextArea;
     public string _titleNewTodoItem = "";
-    private string _newDescription = "";
+    private string _newDescription = "", _newListTitle = "";
 
     private void OnEnter(KeyboardEventArgs e)
     {
@@ -111,6 +136,14 @@
         await OnDescriptionUpdate.InvokeAsync();
     }
 
+    private async Task SaveTitle()
+    {
+        todoList.Title = _newListTitle;
+
+        await OnTitleUpdate.InvokeAsync();
+    }
+
+
     private async Task OnCheckMarkClick(int listId, int itemId)
     {
         await Task.Delay(10);
@@ -122,5 +155,11 @@
     {
         _newDescription = todoList.Description;
         _descriptionTextArea.FocusAsync();
+    }
+
+    private void OnTitleClick()
+    {
+        _newListTitle = todoList.Title;
+        _titleTextArea.FocusAsync();
     }
 }

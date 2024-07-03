@@ -57,10 +57,13 @@
                 }
                 @foreach (TodoItem item in todoList.TodoItems.Where(x => x.IsDone == false))
                 {
-                    <li class="list-group-item">
-                        <button class="form-check-input me-1 rounded-1" type="button" value="" id="checkbox-@item.Id" @onclick="() => OnCheckMarkClick(todoList.Id, item.Id)">
-                        </button>
-                        <label class="form-check-label">@item.Title</label>
+                    <li class="list-group-item d-flex">
+                        <div>
+                            <button class="form-check-input me-1 rounded-1" type="button" value="" id="checkbox-@item.Id" @onclick="() => OnCheckMarkClick(todoList.Id, item.Id)"></button>
+                        </div>
+                        <div class="ps-1">
+                            <label class="form-check-label text-break">@item.Title</label>
+                        </div>
                     </li>
                 }
                 <li class="list-group-item container">
@@ -89,11 +92,15 @@
             <ul class="mb-3 list-group text-start text-bg-primary collapse" id="collapseDone">
                 @foreach (TodoItem item in todoList.TodoItems.Where(x => x.IsDone == true))
                 {
-                    <li class="list-group-item">
-                        <button class="form-check-input me-1 rounded-1 btn-primary" type="button" value="" id="checkbox-@item.Id" @onclick="() => OnCheckMarkClick(todoList.Id, item.Id)">
-                            <small><i class="fa-solid fa-check fa-xs text-light" style="position:relative; left: -2px; top: -6px;"></i></small>
-                        </button>
-                        <label class="form-check-label text-body-secondary">@item.Title</label>
+                    <li class="list-group-item d-flex">
+                        <div>
+                            <button class="form-check-input me-1 rounded-1 btn-primary" type="button" value="" id="checkbox-@item.Id" @onclick="() => OnCheckMarkClick(todoList.Id, item.Id)">
+                                <small><i class="fa-solid fa-check fa-xs text-light" style="position:relative; left: -2px; top: -6px;"></i></small>
+                            </button>
+                        </div>
+                        <div class="ps-2">
+                            <label class="form-check-label text-body-secondary text-break">@item.Title</label>
+                        </div>
                     </li>
                 }
 

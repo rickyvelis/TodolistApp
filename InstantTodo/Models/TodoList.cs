@@ -58,15 +58,19 @@
 
         public string GetDescriptionPreview()
         {
-            if (!string.IsNullOrEmpty(Description))
+            if (string.IsNullOrEmpty(Description))
             {
-                if (Description.Length > DESC_PREVIEW_MAX_LENGTH)
-                {
-                    return Description[..DESC_PREVIEW_MAX_LENGTH] + "...";
-                }
+                return "";
+            }
+
+            if (Description.Length > DESC_PREVIEW_MAX_LENGTH)
+            {
+                return Description[..DESC_PREVIEW_MAX_LENGTH] + "...";
+            }
+            else
+            {
                 return Description;
             }
-            return "";
         }
     }
 }

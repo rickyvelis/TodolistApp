@@ -51,7 +51,12 @@
 
     async Task AddList(string title)
     {
-        int newId = todoLists.OrderByDescending(x => x.Id).FirstOrDefault().Id + 1;
+        int newId = 1;
+        if (todoLists.Any())
+        {
+            newId = todoLists.OrderByDescending(x => x.Id).FirstOrDefault().Id + 1;
+
+        }
 
         todoLists.Add(new TodoList() { Id = newId, Title = title });
         await UpdateLocalStorage();

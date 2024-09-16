@@ -64,16 +64,18 @@
 
     async Task DeleteList(int id)
     {
-        //TODO NULL HANDLING
-        TodoList list = todoLists.Where(x => x.Id == id).FirstOrDefault();
+        TodoList? list = todoLists.Where(x => x.Id == id).FirstOrDefault();
 
-        todoLists.Remove(list);
-
-        if (activeId == id) //Makes sure to close the opened todolist, when the todolist is the one that is removed.
+        if(list != null)
         {
-            activeId = int.MaxValue;
+            todoLists.Remove(list);
+
+            if (activeId == id) //Makes sure to close the opened todolist, when the todolist is the one that is removed.
+            {
+                activeId = int.MaxValue;
+            }
+            await UpdateLocalStorage();
         }
-        await UpdateLocalStorage();
     }
 
     private void CloseList() => activeId = int.MaxValue;

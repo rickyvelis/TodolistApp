@@ -4,8 +4,9 @@
     {
         <ul class="mb-3 list-group text-start shadow-lg">
             <li class="list-group-item container">
+                
+                @* Title *@
                 <div class="row g-1">
-                    @* Title *@
                     <div class="col-11 dropdown-center">
                         <button class="btn rounded-1 text-start" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true" @onclick="() => OnTitleClick()">
                             <h4>@todoList.Title</h4>
@@ -15,7 +16,7 @@
                                 <input class="form-control" placeholder="Write a title here" id="titleFloatingText" @bind=_newListTitle @ref="_titleTextArea"></input>
                                 <label for="titleFloatingText">Title</label>
                             </div>
-                            <a type="button" class="btn btn-primary w-100" @onclick="() => SaveTitle()">Save</a>
+                            <button type="button" class="btn btn-primary w-100" @onclick="() => SaveTitle()">Save</button>
                         </form>
                     </div>
 
@@ -24,6 +25,7 @@
                     </div>
                 </div>
 
+                @*Description*@
                 <div class="row">
                     <div class="col dropdown-center">
                         <button class="btn rounded-1 text-secondary text-start" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true" @onclick="() => OnDescriptionClick()">
@@ -41,12 +43,14 @@
                                 <textarea class="form-control" placeholder="Write a description here" id="floatingTextarea" style="height: 100px" @bind=_newDescription @ref="_descriptionTextArea"></textarea>
                                 <label for="floatingTextarea">Description</label>
                             </div>
-                            <a type="button" class="btn btn-primary w-100" @onclick="() => SaveDescription()">Save</a>
+                            <button type="button" class="btn btn-primary w-100" @onclick="() => SaveDescription()">Save</button>
                         </form>
                     </div>
                 </div>
 
             </li>
+
+            @*Uncompleted items*@
             @if (todoList.TodoItems != null)
             {
                 if (todoList.TodoItems.Count <= 0)
@@ -55,7 +59,7 @@
                         Add your first task in the textbox below!
                     </li>
                 }
-                @foreach (TodoItem item in todoList.TodoItems.Where(x => x.IsDone == false))
+                foreach (TodoItem item in todoList.TodoItems.Where(x => x.IsDone == false))
                 {
                     <li class="list-group-item d-flex">
                         <div>
@@ -81,6 +85,7 @@
             }
         </ul>
 
+        @*Completed items*@
         @if (todoList.TodoItems != null)
         {
             <p class="d-inline-flex">

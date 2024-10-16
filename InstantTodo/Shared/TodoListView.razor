@@ -62,11 +62,16 @@
                 foreach (TodoItem item in todoList.TodoItems.Where(x => x.IsDone == false))
                 {
                     <li class="list-group-item d-flex">
-                        <div>
+                        <div >
                             <button class="form-check-input me-1 rounded-1" type="button" value="" id="checkbox-@item.Id" @onclick="() => OnCheckMarkClick(todoList.Id, item.Id)"></button>
                         </div>
-                        <div class="ps-1">
+                        <div class="ps-1 flex-fill">
                             <label class="form-check-label text-break">@item.Title</label>
+                        </div>
+                        <div>
+                            <a href="#" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </a>
                         </div>
                     </li>
                 }

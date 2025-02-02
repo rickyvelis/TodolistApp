@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "InstantTodo",
   "resources": {
-    "hash": "sha256-EpyhJ/EuXhtSo/tLPQtObpY//aTDxQcqxEyAIfWD3js=",
+    "hash": "sha256-MNM0y3LaW4POAAwB7LhIge+N1674jmhk5G4Z/8ZRooE=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-VdKq87/z5NIxZKmuM+fv38XF+RcEb/bg3jVBwQSfwP4="
     },
@@ -42,8 +42,6 @@
       "Microsoft.JSInterop.wasm": "sha256-GsAOzdCVCC+n7tPF4K83ctQiqj1M850bsiJ5oPCpOiE=",
       "Microsoft.JSInterop.WebAssembly.wasm": "sha256-k1ycznAW3kfyxO+I3lroU5VWTHPfMEmvwPqq6dnWPtk=",
       "System.IO.Pipelines.wasm": "sha256-9+0wmF9ztQ166ljV3tgX0vNZO5VAnk6qtS+PuZ0JNIE=",
-      "System.Text.Encodings.Web.wasm": "sha256-HC25yE1SRo2D+3es3z07qkTVH1YzZ1R980fbxiOBhCo=",
-      "System.Text.Json.wasm": "sha256-j/MYAL5GXEHNYLGQx6YTcUG1/m5Ut0fM5lD3gwmeVIA=",
       "Microsoft.CSharp.wasm": "sha256-Uadhh9ejd0eod083HcpwnJ3OpcrMgcP88Vyftm5/ZkA=",
       "Microsoft.VisualBasic.Core.wasm": "sha256-SBz1WgEN4UGzdrCKxLUaNAY5S7cs6RLZTuFDdPkMS6g=",
       "Microsoft.VisualBasic.wasm": "sha256-GWWO9YY5BhSXDF/4kKQ6mS6AUpTQDRYxh8SJehKh8YA=",
@@ -179,6 +177,8 @@
       "System.Text.Encoding.CodePages.wasm": "sha256-RKxD0JxpDE+wVM9XgRJTWJOrO3cY5j+sjB87rDKoBHk=",
       "System.Text.Encoding.Extensions.wasm": "sha256-sckRBWbY0/x1IP5VajERSulMTnbc1eBrmyWI0161mGc=",
       "System.Text.Encoding.wasm": "sha256-Wsq2uK1kbcS5Rx8OQ4hqnSkFld0bWvs22/CKxZtaG3o=",
+      "System.Text.Encodings.Web.wasm": "sha256-HC25yE1SRo2D+3es3z07qkTVH1YzZ1R980fbxiOBhCo=",
+      "System.Text.Json.wasm": "sha256-j/MYAL5GXEHNYLGQx6YTcUG1/m5Ut0fM5lD3gwmeVIA=",
       "System.Text.RegularExpressions.wasm": "sha256-q6LKJmlxogEJNqJwZNeoM4FCyaWKA7uqzD9VYQY06nI=",
       "System.Threading.Channels.wasm": "sha256-dzLvqISJviasdstLg+JLYIe2FG3fupFL+HFtypxCYqs=",
       "System.Threading.Overlapped.wasm": "sha256-WCgszWOyUNlmdmjEyCawrYTxqODM1Br7TK5CHRuHZuQ=",
@@ -210,10 +210,10 @@
       "mscorlib.wasm": "sha256-04e4k5XU8HWGB/dq/2+j84xzzGPflTs0IYWI0OxogVc=",
       "netstandard.wasm": "sha256-gnGZURPnoSmjXuYNCOJi5tt8qn2LRImWgue1Ru3/TDQ=",
       "System.Private.CoreLib.wasm": "sha256-6w3jYr0arcp8jnt4aeqh+AmqrLA6q7jl9rQYAwLzE0M=",
-      "InstantTodo.wasm": "sha256-CV9CSUoT/f0c+EUWXC6+wC5TLZ9/bKIBM9REixN/Y2I="
+      "InstantTodo.wasm": "sha256-VVby45CdITxnSJ78VQ82nBAbwST1Ub84+XAhhL28sVs="
     },
     "pdb": {
-      "InstantTodo.pdb": "sha256-yE5RrQU+AgILByWcfiTg4sTxqtLY03g151QfBOzN3g4="
+      "InstantTodo.pdb": "sha256-5r1iVP2uOmS3aB4QxLK0WCMTgIP1BWOiNDrlvcbx2+Y="
     }
   },
   "cacheBootResources": true,
